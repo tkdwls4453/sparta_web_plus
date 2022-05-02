@@ -70,6 +70,35 @@
                 }
             })
         }
+
+        function save_word() {
+            $.ajax({
+                type: "POST",
+                url: `/api/save_word`,
+                data: {
+                    word_give: "{{ word }}",
+                    definition_give: "{{ result.definitions[0].definition }}"
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.href = "/detail/{{ word }}?status_give=old"
+                }
+            });
+        }
+
+        function delete_word(){
+            $.ajax({
+                type: "POST",
+                url: "/api/delete_word",
+                data:{
+                    word_give: '{{ word }}'
+                },
+                success: function(response){
+                    alert(response['msg'])
+                    window.location.href='/'
+                }
+            });
+        }
     </script>
 
     <style>
@@ -139,10 +168,10 @@
             </div>
             {% if status=='new' %}
                 <button id="btn-save" class="btn btn-outline-sparta btn-lg">
-                    <i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                    <i class="fa fa-floppy-o" onclick="save_word()" aria-hidden="true"></i></button>
             {% else %}
                 <button id="btn-delete" class="btn btn-sparta btn-lg">
-                    <i class="fa fa-trash" aria-hidden="true"></i></button>
+                    <i class="fa fa-trash" onclick="delete_word()" aria-hidden="true"></i></button>
             {% endif %}
         </div>
         <hr>
