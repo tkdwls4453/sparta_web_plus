@@ -10,7 +10,8 @@ db = client.dbsparta_plus_week2
 @app.route('/')
 def main():
     # DB에서 저장된 단어 찾아서 HTML에 나타내기
-    return render_template("index.html")
+    words = db.words.find({},{'_id': False})
+    return render_template("index.html", words = words)
 
 
 @app.route('/detail/<keyword>')
