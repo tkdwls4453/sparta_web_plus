@@ -37,6 +37,7 @@
         let word = '{{ word }}'
         $(document).ready(function () {
             {#get_definitions();#}
+            get_example()
         })
 
         function get_definitions() {
@@ -110,6 +111,60 @@
                 }
             });
         }
+
+        function get_example(){
+            $('#example-list').empty();
+            $.ajax({
+                type: "GET",
+                url: `/api/get_exs?word_give=${word}`,
+                data: {},
+                success: function(response){
+                    console.log(response['result'])
+                    console.log(response['examples'])
+                    let examples = response['examples'];
+                    let html_temp=``;
+                    for (let i = 0; examples.length; i++) {
+                        let example = examples[i]
+                        html_temp = ` <li id="ex-${i}">${example.example}.&nbsp;&nbsp;&nbsp;<a href="javascript:delete_ex(${i})">delete</a></li>`
+                        $('#example-list').append(html_temp)
+                    }
+
+
+                }
+            })
+        }
+
+        function add_ex(){
+            let new_ex = $('#new-example').val();
+            console.log(new_ex)
+            $.ajax({
+                type: "POST",
+                url: `/api/save_ex`,
+                data:{
+                    word_give : word,
+                    example_give : new_ex
+                },
+                success: function(response){
+                    console.log(response)
+                    get_example()
+                }
+            });
+        }
+
+        function delete_ex(i){
+            console.log("deleting", i)
+            $.ajax({
+                type: "POST",
+                url: `/api/delete_ex`,
+                data:{
+                    word_give : word,
+                    number_give : i
+                },
+                success: function(response){
+                    get_example()
+                }
+            })
+        }
     </script>
 
 </head>
@@ -146,8 +201,20 @@
                 </div>
             {% endfor %}
         </div>
-
     </div>
+    {% if status != 'new' %}
+        <div id="examples" class="container">
+            <h3 style="text-align: center;margin-bottom: 1rem">Write your own sentences!</h3>
+            <ul id="example-list">
+                <li id="ex-0">This sentence contains the word 'word'.&nbsp;&nbsp;&nbsp;<a href="javascript:delete_ex(0)">delete</a></li>
+                <li id="ex-1">I don't like using the MS Word program.&nbsp;&nbsp;&nbsp;<a href="javascript:delete_ex(1)">delete</a></li>
+            </ul>
+            <div class="d-flex justify-content-between" style="margin-left: 20px;">
+                <input id="new-example" class="form-control form-control-sm" style="margin-right: 0.5rem">
+                <button class="btn btn-outline-secondary btn-sm" onclick="add_ex()">add</button>
+            </div>
+        </div>
+    {% endif %}
 </div>
 </body>
 </html>

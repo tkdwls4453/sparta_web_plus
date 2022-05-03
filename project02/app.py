@@ -51,6 +51,33 @@ def delete_word():
     db.words.delete_one({"word":word_receive})
     return jsonify({'result': 'success', 'msg': f'{word_receive} 삭제'})
 
+@app.route('/api/get_exs', methods=['GET'])
+def get_exs():
+    word_receive = request.args.get('word_give')
+    examples = list(db.examples.find({'word':word_receive},{'_id':False}))
+    return jsonify({'result':'success', 'examples':examples})
+
+@app.route('/api/save_ex', methods=['POST'])
+def save_ex():
+    word_receive = request.form['word_give']
+    example_receive = request.form['example_give']
+
+    doc={
+        'word' : word_receive,
+        'example': example_receive
+    }
+
+    db.examples.insert_one(doc)
+
+    return jsonify({'result':'success'})
+
+@app.route('/api/delete_ex', methods=['POST'])
+def delete_ex():
+    word_receive = request.form['word_give']
+    number_receive = int(request.form['number_give'])
+    delete_word = list(db.examples.find({'word':word_receive},{'_id':False}))[number_receive]['example']
+    db.examples.delete_one({'example':delete_word})
+    return jsonify({'result':'success'})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
