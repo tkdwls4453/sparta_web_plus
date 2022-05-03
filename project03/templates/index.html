@@ -77,6 +77,8 @@
         let y_cen = 37.4981125   // lat
         let x_cen = 127.0379399  // long
         let map;
+        let markers = [];
+
         $(document).ready(function () {
             get_matjips();
             map = new naver.maps.Map('map', {
@@ -103,6 +105,7 @@
                         let matjip = matjips[i]
                         console.log(matjip)
                         make_card(i, matjip);
+                        make_marker(matjip);
                     }
                 }
             })
@@ -118,6 +121,15 @@
                                 </div>
                             </div>`;
             $('#matjip-box').append(html_temp)
+        }
+
+        function make_marker(matjip){
+            let marker = new naver.maps.Marker({
+                position: new naver.maps.LatLng(matjip['mapy'], matjip['mapx']),
+                map: map
+            });
+            markers.push(marker)
+            return marker
         }
     </script>
 </head>
