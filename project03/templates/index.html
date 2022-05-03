@@ -15,6 +15,10 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
           crossorigin="anonymous">
 
+    <!-- font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jua&display=swap" rel="stylesheet">
+
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -26,18 +30,45 @@
             crossorigin="anonymous"></script>
 
     <style>
-        .wrap{
 
-        }
-        .banner{
-
-        }
-        .matjop-list{
-
+        .wrap {
+            width: 90%;
+            max-width: 750px;
+            margin: 0 auto;
         }
 
-        #map{
-            width:100%;
+        .banner {
+            width: 100%;
+            hight: 20vh;
+            background-image: url("{{ url_for('static', filename='banner.jpg') }}");
+            background-position: center;
+            background-size: contain;
+            background-repeat: repeat;
+        }
+
+        h1.title {
+            color: white;
+            font-size: 3rem;
+            font-family: 'Jua', sans-serif;
+        }
+
+        h5{
+            font-family: 'Jua', sans-serif;
+        }
+
+        .matjop-list {
+            overflow: scroll;
+            width: 100%;
+            height: calc(20vh - 30px);
+            position: relative;
+        }
+
+        .card-title, .card-subtitle {
+            display: inline;
+        }
+
+        #map {
+            width: 100%;
             height: 50vh;
             margin: 20px auto 20px auto;
         }
@@ -46,8 +77,9 @@
         let y_cen = 37.4981125   // lat
         let x_cen = 127.0379399  // long
         let map;
-        $(document).ready(function(){
-            map = new naver.maps.Map('map',{
+        $(document).ready(function () {
+            get_matjips();
+            map = new naver.maps.Map('map', {
                 center: new naver.maps.LatLng(y_cen, x_cen),
                 zoom: 12,
                 zoomControl: true,
@@ -56,25 +88,60 @@
                     position: naver.maps.Position.TOP_RIGHT
                 }
             });
+
         })
+
+        function get_matjips(){
+            $('#matjop-box').empty();
+            $.ajax({
+                type: "GET",
+                url: "/matjip",
+                data:{},
+                success: function(response){
+                    let matjips = response['matjip_list']
+                    for (let i=0; i<matjips.length; i++){
+                        let matjip = matjips[i]
+                        console.log(matjip)
+                        make_card(i, matjip);
+                    }
+                }
+            })
+        }
+
+        function make_card(i, matjip){
+            let html_temp = `<div class="card" id="card-${i}">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="#" class="matjip-title">${matjip.title}</a></h5>
+                                    <h6 class="card-subtitle mb-2 text-muted">${matjip.category}</h6>
+                                    <p class="card-text">${matjip.address}</p>
+                                    <p class="card-text" style="color:blue;">${matjip.show}</p>
+                                </div>
+                            </div>`;
+            $('#matjip-box').append(html_temp)
+        }
     </script>
 </head>
 <body>
-    <div class="wrap">
-        <div class="banner"></div>
-        <div id="map"></div>
+<div class="wrap">
+    <div class="banner">
+        <div class="d-flex flex-column align-items-center"
+             style="background-color: rgb(0,0,0,0.5); width: 100%; height: 100%;">
+            <h1 class="title mt-5 mb-2">스파르타 맛집 지도</h1>
+        </div>
+    </div>
+    <div id="map"></div>
 
-        <div class="matjop-list" id="matjip-box">
-            <div class="card" id="card-0">
-                <div class="card-body">
-                    <h5 class="card-title"><a href="#" class="matjip-title">혼가츠</a></h5>
-                    <h6 class="card-subtitle mb-2 text-muted">일식</h6>
-                    <p class="card-text">서울 마포구 와우산로21길 36-6 (서교동)</p>
-                    <p class="card-text" style="color:blue;">생방송 투데이</p>
-                </div>
+    <div class="matjop-list" id="matjip-box">
+        <div class="card" id="card-0">
+            <div class="card-body">
+                <h5 class="card-title"><a href="#" class="matjip-title">혼가츠</a></h5>
+                <h6 class="card-subtitle mb-2 text-muted">일식</h6>
+                <p class="card-text">서울 마포구 와우산로21길 36-6 (서교동)</p>
+                <p class="card-text" style="color:blue;">생방송 투데이</p>
             </div>
         </div>
     </div>
+</div>
 
 </body>
 </html>
