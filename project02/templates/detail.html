@@ -136,6 +136,7 @@
 
         function add_ex(){
             let new_ex = $('#new-example').val();
+
             console.log(new_ex)
             $.ajax({
                 type: "POST",
@@ -147,6 +148,7 @@
                 success: function(response){
                     console.log(response)
                     get_example()
+                    $('#new-example').val('')
                 }
             });
         }
