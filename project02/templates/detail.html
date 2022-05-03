@@ -12,6 +12,14 @@
     <!--fontawesone -->
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
+    <!--og_tag, favicon -->
+    <meta property="og:title" content="Sparta Vocabulary Notebook"/>
+    <meta property="og:description" content="mini project for Web Plus"/>
+    <meta property="og:image" content="{{ url_for('static', filename='logo_red.png') }}"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+
+
     <!--mystyle 적용 -->
     <link href="{{ url_for("static", filename="mystyle.css") }}" rel="stylesheet">
 
